@@ -7,8 +7,13 @@ import android.content.Intent
 import android.net.Uri
 import android.provider.MediaStore
 import android.widget.ImageView
+import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.objects.ObjectDetection
 import com.google.mlkit.vision.objects.defaults.ObjectDetectorOptions
+import java.io.IOException
+import android.graphics.Bitmap
+import android.widget.Toast
+
 
 class SelectImageActivity : AppCompatActivity() {
     val options = ObjectDetectorOptions.Builder()
@@ -22,7 +27,7 @@ class SelectImageActivity : AppCompatActivity() {
     lateinit var button: Button
     private val pickImage = 100
     private var imageUri: Uri? = null
-
+    lateinit var image: InputImage
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,6 +48,21 @@ class SelectImageActivity : AppCompatActivity() {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == RESULT_OK && requestCode == pickImage) {
             imageUri = data?.data
+            val bitmap = MediaStore.Images.Media.getBitmap(this.contentResolver, imageUri)
+            val image = InputImage.fromBitmap(bitmap, 0)
+            objectDetector.process(image)
+                .addOnSuccessListener { detectedObjects ->
+                    for (detectedObject in detectedObjects) {
+                        val boundingBox = detectedObject.boundingBox
+                        val trackingId = detectedObject.trackingId
+
+                        //val toast = Toast.makeText(applicationContext, detectedObject.labels[0].text, Toast.LENGTH_LONG)
+                        //toast.show()
+                    }
+                }
+                .addOnFailureListener { e ->
+
+                }
             imageView.setImageURI(imageUri)
         }
     }
