@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.project">
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -9,13 +10,21 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Project">
         <activity
-            android:name=".MLKitActivity"
+            android:name=".imageActivity"
+            android:exported="true" />
+        <activity
+            android:name=".MainActivity"
             android:exported="true" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".MLKitActivity"
+            android:exported="true"/>
+
         <activity
             android:name=".SettingsActivity"
             android:exported="true" />
@@ -24,7 +33,8 @@
             android:exported="true" />
         <activity
             android:name=".ModeActivity"
-            android:exported="true"/>
+            android:exported="true" />
+
         <meta-data
             android:name="com.google.mlkit.vision.DEPENDENCIES"
             android:value="ica" />
