@@ -17,6 +17,7 @@ import android.widget.TextView
 import android.widget.Toast
 import org.w3c.dom.Text
 import android.R.attr.data
+import android.app.Instrumentation
 import com.google.firebase.ml.vision.label.FirebaseVisionImageLabeler
 
 
@@ -34,7 +35,6 @@ class SelectImageActivity : AppCompatActivity() {
     private val pickImage = 100
     private var imageUri: Uri? = null
     lateinit var image: InputImage
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_select_image)
@@ -46,8 +46,11 @@ class SelectImageActivity : AppCompatActivity() {
         btnsettingsimg.setOnClickListener {
             /*val settings = Intent(this, SettingsActivity::class.java)
             startActivity(settings)*/
-            val gallery = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI)
-            startActivityForResult(gallery, pickImage)
+            /*val gallery = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI)
+            startActivityForResult(gallery, pickImage)*/
+            val storageIntent = Intent()
+            storageIntent.setType("image/*")
+            storageIntent.setAction(Intent.ACTION_GET_CONTENT)
 
 
         }
