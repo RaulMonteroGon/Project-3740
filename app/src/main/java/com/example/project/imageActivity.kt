@@ -7,6 +7,7 @@ import android.widget.TextView
 import android.graphics.BitmapFactory
 
 import android.graphics.Bitmap
+import android.net.Uri
 import android.speech.tts.TextToSpeech
 import android.util.Log
 import android.widget.Toast
@@ -31,19 +32,16 @@ class imageActivity : AppCompatActivity(){
 
 
 
-        if (intent.hasExtra("byteArray")) {
-            val bitmap = BitmapFactory.decodeByteArray(
-                intent.getByteArrayExtra("byteArray"),
-                0,
-                intent.getByteArrayExtra("byteArray")!!.size
-            )
-            ivPicture.setImageBitmap(bitmap)
-        }
+
+        ivPicture.setImageURI(Model.instance().getImage() as Uri?)
+
         if(intent.hasExtra("result")){
             tvResult.text = intent.getStringExtra("result")
             //speak()
             }
-        speak()
+        if(Model.instance().getIndications() == true) {
+            speak()
+        }
     }
 
 

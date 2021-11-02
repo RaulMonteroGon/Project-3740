@@ -97,6 +97,7 @@ class MainActivity : AppCompatActivity(),GestureDetector.OnGestureListener {
                         inputImage = InputImage.fromFilePath(this@MainActivity,data?.data)
                         //ivPicture.setImageURI(data?.data)
                         image = inputImage
+                        Model.instance().setImage(data?.data)
                         processImage()
 
                     }catch (e: Exception){
@@ -117,7 +118,9 @@ class MainActivity : AppCompatActivity(),GestureDetector.OnGestureListener {
             storageIntent.setType("image/*")
             storageIntent.setAction(Intent.ACTION_GET_CONTENT)
             galleryLauncher.launch(storageIntent)
-            /*
+
+
+        /*
             val buffer: ByteBuffer = image.planes[0].buffer
             val bytes = ByteArray(buffer.capacity())
             buffer.get(bytes)
@@ -171,17 +174,21 @@ class MainActivity : AppCompatActivity(),GestureDetector.OnGestureListener {
                 val valueY:Float = y2-y1
                 if(abs(valueX)> MIN_DISTANCE){
                     if(x2>x1){
-                        Toast.makeText(this,"RightSwipe",Toast.LENGTH_SHORT).show()
+                        //Toast.makeText(this,"RightSwipe",Toast.LENGTH_SHORT).show()
                         val storageIntent = Intent()
                         storageIntent.setType("image/*")
                         storageIntent.setAction(Intent.ACTION_GET_CONTENT)
                         galleryLauncher.launch(storageIntent)
                     }else{
-                        Toast.makeText(this,"Left Swipe",Toast.LENGTH_SHORT).show()
+                        //Toast.makeText(this,"Left Swipe",Toast.LENGTH_SHORT).show()
+                        val cameraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+                        cameraLauncher.launch(cameraIntent)
                     }
                 }else if(abs(valueY)> MIN_DISTANCE){
                     if(y2>y1){
                         Toast.makeText(this,"BottomSwipe",Toast.LENGTH_SHORT).show()
+                        val settings = Intent(this, SettingsActivity::class.java)
+                        startActivity(settings)
                     }else{
                         Toast.makeText(this,"Top Swipe",Toast.LENGTH_SHORT).show()
                     }
