@@ -22,11 +22,13 @@ import java.lang.Exception
 import android.graphics.BitmapFactory
 import java.nio.ByteBuffer
 import android.R.attr.bitmap
+import android.speech.tts.TextToSpeech
 import android.view.GestureDetector
 import android.view.MotionEvent
 import android.widget.Toast
 import java.io.ByteArrayOutputStream
 import java.lang.Math.abs
+import java.util.*
 
 
 class MainActivity : AppCompatActivity(),GestureDetector.OnGestureListener {
@@ -55,6 +57,8 @@ class MainActivity : AppCompatActivity(),GestureDetector.OnGestureListener {
     var y2:Float = 0.0f
     var y1:Float = 0.0f
 
+
+    private var tts : TextToSpeech? = null
     companion object{
         const val MIN_DISTANCE = 150
     }
@@ -120,42 +124,15 @@ class MainActivity : AppCompatActivity(),GestureDetector.OnGestureListener {
             galleryLauncher.launch(storageIntent)
 
 
-        /*
-            val buffer: ByteBuffer = image.planes[0].buffer
-            val bytes = ByteArray(buffer.capacity())
-            buffer.get(bytes)
-            val bitmapImage = BitmapFactory.decodeByteArray(bytes, 0, bytes.size, null)
-
-            val galleryIntent = Intent(this, imageActivity::class.java)
-
-            val bs = ByteArrayOutputStream()
-            bitmapImage.compress(Bitmap.CompressFormat.JPEG, 50, bs)
-            galleryIntent.putExtra("image", bs.toByteArray())
-            galleryIntent.putExtra("result", result)
-
-            startActivity(galleryIntent)*/
         }
         btncamera.setOnClickListener {
             val cameraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
             cameraLauncher.launch(cameraIntent)
 
-            /*
-            val buffer: ByteBuffer = image.planes[0].buffer
-            val bytes = ByteArray(buffer.capacity())
-            buffer.get(bytes)
-            val bitmapImage = BitmapFactory.decodeByteArray(bytes, 0, bytes.size, null)
-
-            val photoIntent = Intent(this, imageActivity::class.java)
-
-            val bs = ByteArrayOutputStream()
-            bitmapImage.compress(Bitmap.CompressFormat.JPEG, 50, bs)
-            photoIntent.putExtra("image", bs.toByteArray())
-            photoIntent.putExtra("result", result)
-
-            startActivity(photoIntent)*/
-
         }
-
+        if (Model.instance().getIndications() == true){
+            speak()
+        }
     }
 
     override fun onTouchEvent(event: MotionEvent?): Boolean {
@@ -219,7 +196,16 @@ class MainActivity : AppCompatActivity(),GestureDetector.OnGestureListener {
         galleryIntent.putExtra("result", result)
         startActivity(galleryIntent)
     }
+    private fun speak() {
+        tts = TextToSpeech(applicationContext,TextToSpeech.OnInitListener {
+            if(it==TextToSpeech.SUCCESS){
+                tts!!.language = Locale.US
+                tts!!.setSpeechRate((0.75f))
+                tts!!.speak("Swipe right to select image, swipe left to take a picture, swipe down to go to settings ",TextToSpeech.QUEUE_FLUSH,null)
 
+            }
+        })
+    }
 
 
 
