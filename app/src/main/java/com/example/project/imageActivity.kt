@@ -18,9 +18,9 @@ import java.util.*
 class imageActivity : AppCompatActivity(){
 
     lateinit var ivPicture : ImageView
-    lateinit var tvResult : TextView
+    lateinit var tvResultt : TextView
     private var tts : TextToSpeech? = null
-
+    lateinit var intenttext : String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,17 +28,17 @@ class imageActivity : AppCompatActivity(){
 
 
         ivPicture = findViewById(R.id.ivPhoto)
-        tvResult = findViewById(R.id.tvResulttt)
+        tvResultt = findViewById(R.id.tvResulttt)
 
 
 
 
         ivPicture.setImageURI(Model.instance().getImage() as Uri?)
-
-        if(intent.hasExtra("result")){
-            tvResult.text = intent.getStringExtra("result")
+        intenttext = intent.getStringExtra("result").toString()
+        tvResultt.text = intenttext
+        Toast.makeText(this,intenttext,Toast.LENGTH_SHORT).show()
             //speak()
-            }
+
         if(Model.instance().getIndications() == true) {
             speak()
         }
@@ -50,7 +50,7 @@ class imageActivity : AppCompatActivity(){
             if(it==TextToSpeech.SUCCESS){
                 tts!!.language = Locale.US
                 tts!!.setSpeechRate((0.5f))
-                tts!!.speak(intent.getStringExtra("result"),TextToSpeech.QUEUE_FLUSH,null)
+                tts!!.speak(intenttext,TextToSpeech.QUEUE_FLUSH,null)
 
             }
         })

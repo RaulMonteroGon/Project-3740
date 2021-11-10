@@ -85,6 +85,7 @@ class MainActivity : AppCompatActivity(),GestureDetector.OnGestureListener {
                         //ivPicture.setImageBitmap(photo)
                         inputImage = InputImage.fromBitmap(photo,0)
                         image = inputImage
+                        Model.instance().setImage(data?.data)
                         processImage()
                     }catch (e: Exception){
 
@@ -126,6 +127,7 @@ class MainActivity : AppCompatActivity(),GestureDetector.OnGestureListener {
 
         }
         btncamera.setOnClickListener {
+
             val cameraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
             cameraLauncher.launch(cameraIntent)
 
@@ -152,10 +154,14 @@ class MainActivity : AppCompatActivity(),GestureDetector.OnGestureListener {
                 if(abs(valueX)> MIN_DISTANCE){
                     if(x2>x1){
                         //Toast.makeText(this,"RightSwipe",Toast.LENGTH_SHORT).show()
-                        val storageIntent = Intent()
+                        /*val storageIntent = Intent()
                         storageIntent.setType("image/*")
                         storageIntent.setAction(Intent.ACTION_GET_CONTENT)
-                        galleryLauncher.launch(storageIntent)
+                        galleryLauncher.launch(storageIntent)*/
+
+                         */
+                        val viewpager = Intent(this, viewpager::class.java)
+                        startActivity(viewpager)
                     }else{
                         //Toast.makeText(this,"Left Swipe",Toast.LENGTH_SHORT).show()
                         val cameraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)

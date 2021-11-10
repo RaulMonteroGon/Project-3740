@@ -1,25 +1,71 @@
 package com.example.project
 
+import android.content.ContentValues
+import android.content.Intent
 import android.graphics.Bitmap
+import android.net.Uri
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.result.ActivityResultLauncher
+import androidx.core.content.ContextCompat.startActivity
+import androidx.core.net.toUri
 import androidx.recyclerview.widget.RecyclerView
+import com.google.mlkit.vision.common.InputImage
+import com.google.mlkit.vision.label.ImageLabeler
+import com.google.mlkit.vision.label.ImageLabeling
+import com.google.mlkit.vision.label.defaults.ImageLabelerOptions
+import java.io.File
 
 class ViewPagerAdapter(private var title: List<String>,private var images:List<Bitmap>): RecyclerView.Adapter<ViewPagerAdapter.Pager2ViewHolder>() {
     inner class Pager2ViewHolder(itemView:View):RecyclerView.ViewHolder(itemView){
         val itemImage: ImageView = itemView.findViewById(R.id.ivImage)
         val itemTitle: TextView = itemView.findViewById(R.id.tvPath)
+
+        private lateinit var galleryLauncher: ActivityResultLauncher<Intent>
+        lateinit var inputImage: InputImage
+        lateinit var image : InputImage
+        lateinit var imagelabeler: ImageLabeler
+        lateinit var result :String
+
         init {
+            imagelabeler = ImageLabeling.getClient(ImageLabelerOptions.DEFAULT_OPTIONS)
             itemImage.setOnClickListener{v:View->
 
-                Toast.makeText(itemView.context,"Has clickado en la imagen ${position+1}",Toast.LENGTH_SHORT).show()
+                val position = adapterPosition
+                Toast.makeText(itemView.context,title[position],Toast.LENGTH_SHORT).show()
+
+                inputImage = InputImage.fromFilePath(itemView.context, Uri.fromFile(File(title[position])))
+                //ivPicture.setImageURI(data?.data)
+                //image = inputImage
+                Model.instance().setImage(Uri.fromFile(File(title[position])))
+                processImage()
+
+
 
             }
         }
+        private fun processImage() {
+            imagelabeler.process(inputImage)
+                .addOnSuccessListener {
+                    result =""
+
+                    for(label in it) {
+                        result = result + "\n"+ label.text
+                    }
+                    val galleryIntent = Intent(itemView.context, imageActivity::class.java)
+                    galleryIntent.putExtra("result", result)
+                    itemView.context.startActivity(galleryIntent)
+                }.addOnFailureListener {
+                    Log.d(ContentValues.TAG,"processImage: ${it.message}")
+                }
+        }
+
+
     }
 
     override fun onCreateViewHolder(parent: ViewGroup,viewType: Int): ViewPagerAdapter.Pager2ViewHolder {
@@ -35,4 +81,5 @@ class ViewPagerAdapter(private var title: List<String>,private var images:List<B
     override fun getItemCount(): Int {
         return images.size
     }
+
 }
