@@ -58,24 +58,7 @@ class viewpager : AppCompatActivity() {
         view_pager2.orientation = ViewPager2.ORIENTATION_HORIZONTAL
 
 
-        galleryLauncher = registerForActivityResult(
-            ActivityResultContracts.StartActivityForResult(),
-            object : ActivityResultCallback<ActivityResult> {
-                override fun onActivityResult(result: ActivityResult?) {
-                    val data = result?.data
-                    try {
-                        inputImage = InputImage.fromFilePath(this@viewpager,data?.data)
-                        //ivPicture.setImageURI(data?.data)
-                        image = inputImage
-                        Model.instance().setImage(data?.data)
-                        processImage()
 
-                    }catch (e: Exception){
-
-                    }
-                }
-            }
-        )
     }
 
     override fun onRequestPermissionsResult(
@@ -131,23 +114,5 @@ class viewpager : AppCompatActivity() {
 
     }
 
-    private fun processImage() {
-        imagelabeler.process(inputImage)
-            .addOnSuccessListener {
-                result =""
 
-                for(label in it) {
-                    result = result + "\n"+ label.text
-                }
-                //tvResult.text = result
-                nextthing()
-            }.addOnFailureListener {
-                Log.d(TAG,"processImage: ${it.message}")
-            }
-    }
-    public fun nextthing(){
-        val galleryIntent = Intent(this, imageActivity::class.java)
-        galleryIntent.putExtra("result", result)
-        startActivity(galleryIntent)
-    }
 }

@@ -26,7 +26,7 @@ import java.util.*
 class ViewPagerAdapter(private var title: List<String>,private var images:List<Bitmap>): RecyclerView.Adapter<ViewPagerAdapter.Pager2ViewHolder>() {
     inner class Pager2ViewHolder(itemView:View):RecyclerView.ViewHolder(itemView){
         val itemImage: ImageView = itemView.findViewById(R.id.ivImage)
-        val itemTitle: TextView = itemView.findViewById(R.id.tvPath)
+        //val itemTitle: TextView = itemView.findViewById(R.id.tvPath)
 
         private lateinit var galleryLauncher: ActivityResultLauncher<Intent>
         lateinit var inputImage: InputImage
@@ -85,7 +85,7 @@ class ViewPagerAdapter(private var title: List<String>,private var images:List<B
     }
 
     override fun onBindViewHolder(holder: ViewPagerAdapter.Pager2ViewHolder, position: Int) {
-        holder.itemTitle.text = title[position]
+        //holder.itemTitle.text = title[position]
         //holder.itemImage.setImageResource(images[position])
         holder.itemImage.setImageBitmap(images[position])
     }

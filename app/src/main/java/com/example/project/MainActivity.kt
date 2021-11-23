@@ -67,7 +67,7 @@ class MainActivity : AppCompatActivity(),GestureDetector.OnGestureListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        btnsettings = findViewById(R.id.btnSettings)
+
         btngallery = findViewById(R.id.btnGallery)
         btncamera = findViewById(R.id.btnCamera)
 
@@ -111,13 +111,6 @@ class MainActivity : AppCompatActivity(),GestureDetector.OnGestureListener {
                 }
             }
         )
-
-
-
-        btnsettings.setOnClickListener {
-            val settings = Intent(this, SettingsActivity::class.java)
-            startActivity(settings)
-        }
         btngallery.setOnClickListener {
             val storageIntent = Intent()
             storageIntent.setType("image/*")
@@ -169,11 +162,10 @@ class MainActivity : AppCompatActivity(),GestureDetector.OnGestureListener {
                     }
                 }else if(abs(valueY)> MIN_DISTANCE){
                     if(y2>y1){
-                        Toast.makeText(this,"BottomSwipe",Toast.LENGTH_SHORT).show()
-                        val settings = Intent(this, SettingsActivity::class.java)
-                        startActivity(settings)
+                        //Toast.makeText(this,"BottomSwipe",Toast.LENGTH_SHORT).show()
+                        Model.instance().setIndications(false)
                     }else{
-                        Toast.makeText(this,"Top Swipe",Toast.LENGTH_SHORT).show()
+                        //Toast.makeText(this,"Top Swipe",Toast.LENGTH_SHORT).show()
                     }
                 }
             }
@@ -206,14 +198,14 @@ class MainActivity : AppCompatActivity(),GestureDetector.OnGestureListener {
 
                 }
             })
-        
+
     }
     private fun speak() {
         tts = TextToSpeech(applicationContext,TextToSpeech.OnInitListener {
             if(it==TextToSpeech.SUCCESS){
                 tts!!.language = Locale.US
                 tts!!.setSpeechRate((0.75f))
-                tts!!.speak("Swipe right to select image, swipe left to take a picture, swipe down to go to settings ",TextToSpeech.QUEUE_FLUSH,null)
+                tts!!.speak("Swipe right to select image, swipe left to take a picture, swipe down to deactivate instructions ",TextToSpeech.QUEUE_FLUSH,null)
 
             }
         })
