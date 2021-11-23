@@ -114,10 +114,14 @@ class viewpager : AppCompatActivity() {
         var cols = listOf<String>(MediaStore.Images.Thumbnails.DATA).toTypedArray()
         rs = contentResolver.query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
             cols,null,null,null)!!
-
+        var numimages = 0
         if(rs!=null){
             while (rs!!.moveToNext()){
                 listasecundaria.add(rs.getString(0))
+                numimages++
+                if (numimages>30){
+                    break;
+                }
                 //Toast.makeText(applicationContext,"Prueba",Toast.LENGTH_SHORT).show()
             }
         }else{

@@ -4,6 +4,7 @@ import android.content.ContentValues
 import android.content.Intent
 import android.graphics.Bitmap
 import android.net.Uri
+import android.speech.tts.TextToSpeech
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -20,6 +21,7 @@ import com.google.mlkit.vision.label.ImageLabeler
 import com.google.mlkit.vision.label.ImageLabeling
 import com.google.mlkit.vision.label.defaults.ImageLabelerOptions
 import java.io.File
+import java.util.*
 
 class ViewPagerAdapter(private var title: List<String>,private var images:List<Bitmap>): RecyclerView.Adapter<ViewPagerAdapter.Pager2ViewHolder>() {
     inner class Pager2ViewHolder(itemView:View):RecyclerView.ViewHolder(itemView){
@@ -32,12 +34,14 @@ class ViewPagerAdapter(private var title: List<String>,private var images:List<B
         lateinit var imagelabeler: ImageLabeler
         lateinit var result :String
 
+        private var tts : TextToSpeech? = null
+
         init {
             imagelabeler = ImageLabeling.getClient(ImageLabelerOptions.DEFAULT_OPTIONS)
             itemImage.setOnClickListener{v:View->
 
                 val position = adapterPosition
-                Toast.makeText(itemView.context,title[position],Toast.LENGTH_SHORT).show()
+                //Toast.makeText(itemView.context,title[position],Toast.LENGTH_SHORT).show()
 
                 inputImage = InputImage.fromFilePath(itemView.context, Uri.fromFile(File(title[position])))
                 //ivPicture.setImageURI(data?.data)
@@ -57,14 +61,22 @@ class ViewPagerAdapter(private var title: List<String>,private var images:List<B
                     for(label in it) {
                         result = result + "\n"+ label.text
                     }
-                    val galleryIntent = Intent(itemView.context, imageActivity::class.java)
-                    galleryIntent.putExtra("result", result)
-                    itemView.context.startActivity(galleryIntent)
+                    Toast.makeText(itemView.context,result,Toast.LENGTH_SHORT).show()
+                    speak()
                 }.addOnFailureListener {
                     Log.d(ContentValues.TAG,"processImage: ${it.message}")
                 }
         }
+        private fun speak() {
+            tts = TextToSpeech(itemView.context,TextToSpeech.OnInitListener {
+                if(it==TextToSpeech.SUCCESS){
+                    tts!!.language = Locale.US
+                    tts!!.setSpeechRate((0.5f))
+                    tts!!.speak(result,TextToSpeech.QUEUE_FLUSH,null)
 
+                }
+            })
+        }
 
     }
 
@@ -81,5 +93,6 @@ class ViewPagerAdapter(private var title: List<String>,private var images:List<B
     override fun getItemCount(): Int {
         return images.size
     }
+
 
 }

@@ -198,9 +198,15 @@ class MainActivity : AppCompatActivity(),GestureDetector.OnGestureListener {
             }
     }
     private fun nextthing(){
-        val galleryIntent = Intent(this, imageActivity::class.java)
-        galleryIntent.putExtra("result", result)
-        startActivity(galleryIntent)
+            tts = TextToSpeech(this,TextToSpeech.OnInitListener {
+                if(it==TextToSpeech.SUCCESS){
+                    tts!!.language = Locale.US
+                    tts!!.setSpeechRate((0.5f))
+                    tts!!.speak(result,TextToSpeech.QUEUE_FLUSH,null)
+
+                }
+            })
+        
     }
     private fun speak() {
         tts = TextToSpeech(applicationContext,TextToSpeech.OnInitListener {
